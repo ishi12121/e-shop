@@ -35,3 +35,30 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
     });
     
 });
+
+// @desc Get all products
+// @route GET /api/v1/products
+// @access Public
+
+export const getProductCtrl = asyncHandler(async (req, res) => {
+    console.log(req.query);
+    //query
+    let productQuery = Product.find();
+    
+    //search by name
+    if (req.query.name) {
+        productQuery = productQuery.find({
+            name: {
+                $regex: req.query.name,
+                $options: "i",
+            },
+        });
+    }
+     //await the query
+     const products = await productQuery;
+   
+    res.json({
+        status: "success",
+        products,
+    });
+});
