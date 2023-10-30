@@ -100,11 +100,46 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
             
         })
     }
+    //pagination
+    //page
+    const page = parseInt(req.query.page) ? parseInt(req.query.page) : 1;
+    //limits
+    const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 10; 
+    //startIdx
+    const startIndex = (page - 1) * limit;
+    //endIdx
+    const endIndex = page * limit;
+    //total
+    const total = await Product.countDocuments();
+
+
+    productQuery = productQuery.skip(startIndex).limit(limit);
+    //pagination results
+    const pagination = {}
+    if(endIndex < total){
+        pagination.next = {
+            page: page + 1,
+            limit
+        }
+    }
+    if (startIndex > 0) {
+        pagination.prev = {
+            page: page - 1,
+            limit
+        }
+    }
+
+
+
      //await the query
      const products = await productQuery;
    
     res.json({
         status: "success",
+        total,
+        results: products.length,
+        pagination,
+        message:"products fetched successfully",
         products,
     });
 });
