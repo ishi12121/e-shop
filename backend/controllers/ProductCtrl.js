@@ -157,4 +157,43 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
         message: "product fetched successfully",
         product,
     });
-})
+});
+
+// @desc  update product
+// @route PUT /api/products/:id/update
+// @access Private/Admin
+
+//added by ai
+export const updateProductCtrl = asyncHandler(async (req, res) => {
+    //update
+    const product = await Product.findById(req.params.id);
+    //update the product
+    product.name = req.body.name || product.name;
+    product.description = req.body.description || product.description;
+    product.category = req.body.category || product.category;
+    product.sizes = req.body.sizes || product.sizes;
+    product.colors = req.body.colors || product.colors;
+    product.price = req.body.price || product.price;
+    product.totalQty = req.body.totalQty || product.totalQty;
+    product.brand = req.body.brand || product.brand;
+    //save the product
+    const updatedProduct = await product.save();
+    //send response
+    res.json({
+        status: "success",
+        message: "product updated successfully",
+        updatedProduct,
+    });
+    
+});
+
+// @desc  delete product
+// @route DELETE /api/products/:id/delete
+// @access Private/Admin
+export const deleteProductCtrl = asyncHandler(async (req, res) => {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    res.json({
+        status: "success",
+        message: "product deleted successfully",
+    });
+});
