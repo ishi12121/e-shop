@@ -54,6 +54,52 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
             },
         });
     }
+    //filter by brand
+    if (req.query.brand) {
+        productQuery = productQuery.find({
+            brand: {
+                $regex: req.query.brand,
+                $options: "i",
+            },
+        });
+    }
+    //filter by category
+    if (req.query.category) {
+        productQuery = productQuery.find({
+            category: {
+                $regex: req.query.category,
+                $options: "i",
+            },
+        });
+    }
+        //filter by color
+        if (req.query.colors) {
+            productQuery = productQuery.find({
+                colors: {
+                    $regex: req.query.colors,
+                    $options: "i",
+                },
+            });
+    }
+            //filter by size
+            if (req.query.size) {
+                productQuery = productQuery.find({
+                    size: {
+                        $regex: req.query.size,
+                        $options: "i",
+                    },
+                });
+    }
+    //filter by price range
+    if (req.query.price) {
+        const priceRange = req.query.price.split("-");
+        //gte: greater than or equal to
+        //lte: less than or equal to
+        productQuery = productQuery.find({
+            price: { $gte: priceRange[0], $lte: priceRange[1] },
+            
+        })
+    }
      //await the query
      const products = await productQuery;
    
