@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 
 export const verifyToken = (token) => {
@@ -8,5 +8,5 @@ export const verifyToken = (token) => {
         } else {
             return decoded;
         }
-  })
-}
+    })
+};
