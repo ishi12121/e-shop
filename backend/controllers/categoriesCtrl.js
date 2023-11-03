@@ -4,9 +4,11 @@ import Category from "../model/Category.js";
 //@route POST /api/v1/categories
 //@access Private/Admin
 export const createCategoryCtrl = asyncHandler(async (req, res) => {
-  const { name, image } = req.body;
+    const { name, image } = req.body;
+    // Convert name to lowercase
+    const lowerCaseName = name.toLowerCase();
   //category exists
-  const categoryExists = await Category.findOne({ name });
+  const categoryExists = await Category.findOne({name: lowerCaseName});
   if (categoryExists) {
     throw new Error("Category Already Exists");
   }

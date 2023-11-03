@@ -4,24 +4,26 @@ import Brand from "../model/Brand.js";
 //@route POST /api/v1/brands
 //@access Private/Admin
 export const createBrandCtrl = asyncHandler(async (req, res) => {
-  const { name} = req.body;
-  //category exists
-  const brandExists = await Brand.findOne({ name });
-  if (brandExists) {
-    throw new Error("brand Already Exists");
-  }
-  // create the category
-  const brand = await Brand.create({
-    name: name.toLowerCase(),
-    user: req.userAuthId,
+    const { name } = req.body;
+    // Convert name to lowercase
+    const lowerCaseName = name.toLowerCase();
+    // Check if brand exists
+    const brandExists = await Brand.findOne({ name: lowerCaseName });
+    if (brandExists) {
+      throw new Error("Brand already exists");
+    }
+    // Create the brand
+    const brand = await Brand.create({
+      name: lowerCaseName,
+      user: req.userAuthId,
+    });
+    // Send response
+    res.json({
+      status: "success",
+      message: "Brand created successfully",
+      brand,
+    });
   });
-  // send response
-  res.json({
-    status: "success",
-    message: "Brand created successfully",
-    brand,
-  });
-}); 
 
 //@desc   Create all brands
 //@route   GET  /api/v1/brands
