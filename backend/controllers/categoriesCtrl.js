@@ -22,7 +22,7 @@ export const createCategoryCtrl = asyncHandler(async (req, res) => {
     message: "Category created successfully",
     category,
   });
-});
+}); 
 
 //@desc   Create all categories
 //@route   GET  /api/v1/categories
