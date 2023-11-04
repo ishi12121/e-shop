@@ -8,6 +8,7 @@ import { globalErrhandler, notFound } from "../middlewares/globalErrHandler.js";
 import categoriesRouter from "../routes/categoriesRouter.js";
 import brandsRouter from "../routes/brandsRouter.js";
 import colorRouter from "../routes/colorRouter.js";
+import reviewRouter from "../routes/reviewsRouter.js";
 
 
 //db connect
@@ -23,6 +24,7 @@ app.use('/api/v1/products/', productsRouter);
 app.use('/api/v1/categories/', categoriesRouter);
 app.use('/api/v1/brands/', brandsRouter);
 app.use('/api/v1/colors/', colorRouter);
+app.use('/api/v1/reviews/', reviewRouter);
 
 //err middleware
 app.use(notFound);
