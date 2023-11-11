@@ -6,7 +6,7 @@ import Category from "../model/Category.js";
 export const createCategoryCtrl = asyncHandler(async (req, res) => {
     const { name, image } = req.body;
     // Convert name to lowercase
-    const lowerCaseName = name.toLowerCase();
+    const lowerCaseName = name?.toLowerCase();
   //category exists
   const categoryExists = await Category.findOne({name: lowerCaseName});
   if (categoryExists) {

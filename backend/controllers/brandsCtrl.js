@@ -6,7 +6,7 @@ import Brand from "../model/Brand.js";
 export const createBrandCtrl = asyncHandler(async (req, res) => {
     const { name } = req.body;
     // Convert name to lowercase
-    const lowerCaseName = name.toLowerCase();
+    const lowerCaseName = name?.toLowerCase();
     // Check if brand exists
     const brandExists = await Brand.findOne({ name: lowerCaseName });
     if (brandExists) {
