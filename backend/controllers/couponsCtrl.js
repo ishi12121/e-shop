@@ -34,3 +34,14 @@ export const createCouponCtrl = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc  Get all coupons
+// @route GET /api/v1/coupons
+// @access Private/Admin
+export const getAllCouponsCtrl = asyncHandler(async (req, res) => {
+    const coupons = await Coupon.find();
+    res.status(200).json({
+        success: true,
+        message: "All coupons",
+        coupons,
+    });
+})
