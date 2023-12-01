@@ -11,6 +11,7 @@ import brandsRouter from "../routes/brandsRouter.js";
 import colorRouter from "../routes/colorRouter.js";
 import reviewRouter from "../routes/reviewsRouter.js";
 import orderRouter from "../routes/ordersRouter.js";
+import couponsRouter from "../routes/couponsRouter.js";
 import Order from "../model/Order.js";
 
 
@@ -96,7 +97,7 @@ app.use('/api/v1/brands/', brandsRouter);
 app.use('/api/v1/colors/', colorRouter);
 app.use('/api/v1/reviews/', reviewRouter);
 app.use('/api/v1/orders/', orderRouter);
-
+app.use('/api/v1/coupons/', couponsRouter);
 
 //err middleware
 app.use(notFound);
