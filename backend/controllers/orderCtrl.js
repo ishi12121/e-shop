@@ -14,7 +14,7 @@ dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const createOrderCtrl = asyncHandler(async (req, res) => {
-  // //get teh coupon
+  // get the coupon
   // const { coupon } = req?.query;
 
   // const couponFound = await Coupon.findOne({
@@ -27,10 +27,10 @@ export const createOrderCtrl = asyncHandler(async (req, res) => {
   //   throw new Error("Coupon does exists");
   // }
 
-  //get discount
+  // get discount
   // const discount = couponFound?.discount / 100;
 
-  //Get the payload(customer, orderItems, shipppingAddress, totalPrice);
+  //Get the payload(customer, orderItems, shippingAddress, totalPrice);
   const { orderItems, shippingAddress, totalPrice } = req.body;
   console.log(req.body);
   //Find the user

@@ -63,7 +63,6 @@ app.post(
           new: true,
         }
       );
-      console.log(order);
     } else {
       return;
     }
