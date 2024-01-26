@@ -14,8 +14,7 @@ const CategorySchema = new Schema(
       required: true,
     },
     image: {
-        type: String,
-        default: "https://picsum.photos/200/300",
+      type: String,
       required: true,
     },
     products: [

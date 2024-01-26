@@ -1,87 +1,85 @@
 import asyncHandler from "express-async-handler";
 import Category from "../model/Category.js";
-//@desc Create new category
-//@route POST /api/v1/categories
-//@access Private/Admin
+// @desc    Create new category
+// @route   POST /api/v1/categories
+// @access  Private/Admin
+
 export const createCategoryCtrl = asyncHandler(async (req, res) => {
-    const { name, image } = req.body;
-    // Convert name to lowercase
-    const lowerCaseName = name?.toLowerCase();
+  const { name } = req.body;
   //category exists
-  const categoryExists = await Category.findOne({name: lowerCaseName});
-  if (categoryExists) {
-    throw new Error("Category Already Exists");
+  const categoryFound = await Category.findOne({ name });
+  if (categoryFound) {
+    throw new Error("Category already exists");
   }
-  // create the category
+  //create
   const category = await Category.create({
-    name: name.toLowerCase(),
-    image,
+    name: name?.toLowerCase(),
     user: req.userAuthId,
+    image: req?.file?.path,
   });
-  // send response
+
   res.json({
     status: "success",
     message: "Category created successfully",
     category,
   });
-}); 
+});
 
-//@desc   Create all categories
-//@route   GET  /api/v1/categories
-//@access  Public
+// @desc    Get all categories
+// @route   GET /api/categories
+// @access  Public
+
 export const getAllCategoriesCtrl = asyncHandler(async (req, res) => {
-    const categories = await Category.find();
-    res.json({
-        status: "success",
-        message: "All categories",
-        categories,
-    });
-}); 
-//@desc   Get single category
-//@route  GET  /api/v1/categories/:id
-//@access   Public
-export const getSingleCategoryCtrl = asyncHandler(async (req, res) => {
-    const category = await Category.findById(req.params.id);
-    if (!category) {
-        throw new Error("Category not found");
-    }
-    res.json({
-        status: "success",
-        message: "category fetched successfully",
-        category,
-    });
+  const categories = await Category.find();
+  res.json({
+    status: "success",
+    message: "Categories fetched successfully",
+    categories,
+  });
 });
-//@desc   Update category
-//@route  PUT /api/v1/categories/:id
-//@access  Private/Admin
-export const updateCategoryCtrl = asyncHandler(async (req, res) => {
-    const { name } = req.body;
 
-    //update
-    const category = await Category.findByIdAndUpdate(
-        req.params.id,
-        { name },
-        { new: true, runValidators: true }
-    );
-    if (!category) {
-        throw new Error("Category not found");
-    }
-    res.json({
-        status: "success",
-        message: "category updated successfully",
-        category,
-    });
+// @desc    Get single category
+// @route   GET /api/categories/:id
+// @access  Public
+export const getSingleCategoryCtrl = asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+  res.json({
+    status: "success",
+    message: "Category fetched successfully",
+    category,
+  });
 });
-//@desc delete category
-//@route DELETE /api/v1/categories/:id
-//@access Private/Admin
-export const deleteCategoryCtrl = asyncHandler(async (req, res) => {
-    const category = await Category.findByIdAndDelete(req.params.id);
-    if (!category) {
-        throw new Error("Category not found");
+
+// @desc    Update category
+// @route   PUT /api/categories/:id
+// @access  Private/Admin
+export const updateCategoryCtrl = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+
+  //update
+  const category = await Category.findByIdAndUpdate(
+    req.params.id,
+    {
+      name,
+    },
+    {
+      new: true,
     }
-    res.json({
-        status: "success",
-        message: "category deleted successfully",
-    });
+  );
+  res.json({
+    status: "success",
+    message: "category updated successfully",
+    category,
+  });
+});
+
+// @desc    delete category
+// @route   DELETE /api/categories/:id
+// @access  Private/Admin
+export const deleteCategoryCtrl = asyncHandler(async (req, res) => {
+  await Category.findByIdAndDelete(req.params.id);
+  res.json({
+    status: "success",
+    message: "Category deleted successfully",
+  });
 });

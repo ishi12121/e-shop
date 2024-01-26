@@ -1,13 +1,27 @@
-import express from "express";
-import { createProductCtrl, deleteProductCtrl, getProductCtrl, getProductsCtrl, updateProductCtrl } from "../controllers/ProductCtrl.js";
+import exppress from "express";
+import upload from "../config/fileUpload.js";
+import {
+  createProductCtrl,
+  getProductsCtrl,
+  getProductCtrl,
+  updateProductCtrl,
+  deleteProductCtrl,
+} from "../controllers/productsCtrl.js";
+import isAdmin from "../middlewares/isAdmin.js";
 import { isLoggedIn } from "../middlewares/isLoggedIn.js";
 
+const productsRouter = exppress.Router();
 
-const productsRouter = express.Router();
+productsRouter.post(
+  "/",
+  isLoggedIn,
+  isAdmin,
+  upload.array("files"),
+  createProductCtrl
+);
 
-productsRouter.post("/",isLoggedIn, createProductCtrl);
 productsRouter.get("/", getProductsCtrl);
 productsRouter.get("/:id", getProductCtrl);
-productsRouter.put("/:id", isLoggedIn, updateProductCtrl);
-productsRouter.delete("/:id/delete", isLoggedIn, deleteProductCtrl);
+productsRouter.put("/:id", isLoggedIn, isAdmin, updateProductCtrl);
+productsRouter.delete("/:id/delete", isLoggedIn, isAdmin, deleteProductCtrl);
 export default productsRouter;

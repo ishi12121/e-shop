@@ -1,20 +1,20 @@
-
 import asyncHandler from "express-async-handler";
-import Order from "../model/Order.js";
-import User from "../model/User.js";
-import Product from "../model/Product.js";
-import Stripe from "stripe";
 import dotenv from "dotenv";
 dotenv.config();
+import Stripe from "stripe";
+import Order from "../model/Order.js";
+import Product from "../model/Product.js";
+import User from "../model/User.js";
+import Coupon from "../model/Coupon.js";
 //@desc create orders
 //@route POST /api/v1/orders
 //@access private
 
-//stripe INSTANCE
+//stripe instance
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const createOrderCtrl = asyncHandler(async (req, res) => {
-  // get the coupon
+  // //get teh coupon
   // const { coupon } = req?.query;
 
   // const couponFound = await Coupon.findOne({
@@ -27,10 +27,10 @@ export const createOrderCtrl = asyncHandler(async (req, res) => {
   //   throw new Error("Coupon does exists");
   // }
 
-  // get discount
+  //get discount
   // const discount = couponFound?.discount / 100;
 
-  //Get the payload(customer, orderItems, shippingAddress, totalPrice);
+  //Get the payload(customer, orderItems, shipppingAddress, totalPrice);
   const { orderItems, shippingAddress, totalPrice } = req.body;
   console.log(req.body);
   //Find the user
@@ -99,29 +99,30 @@ export const createOrderCtrl = asyncHandler(async (req, res) => {
 //@route GET /api/v1/orders
 //@access private
 
-export const getAllOrdersCtrl = asyncHandler(async (req, res) => {
+export const getAllordersCtrl = asyncHandler(async (req, res) => {
   //find all orders
-  const orders = await Order.find();
+  const orders = await Order.find().populate("user");
   res.json({
     success: true,
-    message: "all orders",
+    message: "All orders",
     orders,
   });
 });
-//@desc get single order
-//@route GET /api/v1/orders
-//@access private/admin
-export const getSingleOrderCtrl = asyncHandler(async (req, res) => {
-  //find order by id from params
-  const id = req.params.id
-  const order = await Order.findById(id);
-  // send response
-  res.json({
-    success: true,
-    message: "order fetched successfully",
-    order,
-  })
 
+//@desc get single order
+//@route GET /api/v1/orders/:id
+//@access private/admin
+
+export const getSingleOrderCtrl = asyncHandler(async (req, res) => {
+  //get the id from params
+  const id = req.params.id;
+  const order = await Order.findById(id);
+  //send response
+  res.status(200).json({
+    success: true,
+    message: "Single order",
+    order,
+  });
 });
 
 //@desc update order to delivered

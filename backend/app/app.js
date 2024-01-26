@@ -1,30 +1,33 @@
 import dotenv from "dotenv";
+import cors from "cors";
 import Stripe from "stripe";
 dotenv.config();
-import express from 'express';
-import dbConnect from '../config/dbconnect.js';
-import productsRouter from "../routes/productsRoute.js";
-import userRoutes from "../routes/usersRoute.js";
+import express from "express";
+import path from "path";
+import dbConnect from "../config/dbConnect.js";
 import { globalErrhandler, notFound } from "../middlewares/globalErrHandler.js";
-import categoriesRouter from "../routes/categoriesRouter.js";
 import brandsRouter from "../routes/brandsRouter.js";
+import categoriesRouter from "../routes/categoriesRouter.js";
 import colorRouter from "../routes/colorRouter.js";
-import reviewRouter from "../routes/reviewsRouter.js";
 import orderRouter from "../routes/ordersRouter.js";
-import couponsRouter from "../routes/couponsRouter.js";
+import productsRouter from "../routes/productsRoute.js";
+import reviewRouter from "../routes/reviewRouter.js";
+import userRoutes from "../routes/usersRoute.js";
 import Order from "../model/Order.js";
-
+import couponsRouter from "../routes/couponsRouter.js";
 
 //db connect
 dbConnect();
 const app = express();
+//cors
+app.use(cors());
 //Stripe webhook
-
-//stripe INSTANCE
+//stripe instance
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-const endpointSecret = "whsec_b0fa6962173b9c7332b36d5853da88e6fba50185c4f5c6b11ebc9c1dc0172962";
+const endpointSecret =
+  "whsec_b0fa6962173b9c7332b36d5853da88e6fba50185c4f5c6b11ebc9c1dc0172962";
 
 app.post(
   "/webhook",
@@ -63,6 +66,7 @@ app.post(
           new: true,
         }
       );
+      console.log(order);
     } else {
       return;
     }
@@ -81,25 +85,28 @@ app.post(
   }
 );
 
-
-
-
-
-//pass incoming data 
+//pass incoming data
 app.use(express.json());
+//url encoded
+app.use(express.urlencoded({ extended: true }));
 
+//server static files
+app.use(express.static("public"));
 //routes
-app.use('/api/v1/users/', userRoutes);  
-app.use('/api/v1/products/', productsRouter);
-app.use('/api/v1/categories/', categoriesRouter);
-app.use('/api/v1/brands/', brandsRouter);
-app.use('/api/v1/colors/', colorRouter);
-app.use('/api/v1/reviews/', reviewRouter);
-app.use('/api/v1/orders/', orderRouter);
-app.use('/api/v1/coupons/', couponsRouter);
-
+//Home route
+app.get("/", (req, res) => {
+  res.sendFile(path.join("public", "index.html"));
+});
+app.use("/api/v1/users/", userRoutes);
+app.use("/api/v1/products/", productsRouter);
+app.use("/api/v1/categories/", categoriesRouter);
+app.use("/api/v1/brands/", brandsRouter);
+app.use("/api/v1/colors/", colorRouter);
+app.use("/api/v1/reviews/", reviewRouter);
+app.use("/api/v1/orders/", orderRouter);
+app.use("/api/v1/coupons/", couponsRouter);
 //err middleware
 app.use(notFound);
 app.use(globalErrhandler);
-export default app;
 
+export default app;
